@@ -26,4 +26,8 @@ const rl = readline.createInterface({
     }
 
     })
+
 }
+function sayHello(){
+        console.log("Hello");
+    }
