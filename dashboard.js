@@ -1,4 +1,5 @@
- class LineChart{
+
+class LineChart{
         constructor(canvasId, dataUrl){
             this.canvasId = canvasId;
             this.dataUrl = dataUrl;
@@ -53,7 +54,7 @@
 
             }
         }
-        
+
     }
 
 
@@ -61,76 +62,69 @@
     document.addEventListener("DOMContentLoaded", () =>{
         const chart = new LineChart("lineChart","linedata.json");
         chart.init();
+
     });
+ class radarChart{
+        constructor(canvasId,dataUrl){
+            this.canvasId = canvasId;
+            this.dataUrl = dataUrl;
+            this.chart = null;
+        }
 
-     class radarChart{
-            constructor(canvasid,dataUrl){
-                this.canvasid =  canvasid;
-                this.dataUrl = dataUrl;
-                this.chart = null;
+        renderChart(data){
+            const ctx = document.getElementById(this.canvasId).getContext("2d");
 
-            }
-
-            renderChart(data){
-                const ctx = document.getElementById(this.canvasid).getContext("2d");
-
-                this.chart = new Chart(ctx,{
-                    type:"radar",
-                    data:{
-                        //labels
-                        labels:data.labels,
-                        //datasets
-                        datasets:data.datasets
-
-                    },
-                    options:{
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position:"top"
-                            },
-                            title:{
-                                display:true,
-                                //title
-                                text:"Radar Chart"
-                            }
-
-                        
+            this.chart = new Chart(ctx,{
+                type:"radar",
+                data:{
+                    //Labels
+                    labels:data.labels,
+                    //Datasets
+                    datasets: data.datasets
+                },
+                options:{
+                    responsive: true,
+                    plugins:{
+                        legend:{
+                           position:"top"
                         },
-                        scales:{
-                            r:{
-                                angleLines:{display:true},
-                                suggestedMin:0,
-                                suggestedMax:100
-                            }
+                        title:{
+                            display: true,
+                            //Title
+                            text:"Radar Chart"
                         }
-
+                    },
+                    scales:{
+                        r:{
+                            angleLines:{display:true},
+                            suggestedMin:0,
+                            suggestedMax:100
+                        }
                     }
-                });
-            }
-            async fetchData(){
-                try{
-                    const response = await fetch(this.dataUrl);
-                    if(!response.ok) throw new Error(`Failed to load data: ${response.statusText}`);
-
-                    const data = await response.json();
-                    return data;
-
-                }catch(error){
-                    console.error("Error fetching data: ", error);
-                    return null;
                 }
-                    
-            }
-            async init(){
-                const data = await this.fetchData();
-                if(data) this.renderChart(data);
+            });
+        }
 
+        async fetchData(){
+            try{
+                const response = await fetch(this.dataUrl);
+                if(!response.ok) throw new Error(`Failed to load data: ${response.statusText}`);
+
+                const data = await response.json();
+                return data;
+            } catch(error){
+                console.error("Error fetching data: ", error);
+                return null;
             }
         }
 
-        document.addEventListener("DOMContentLoaded", ()=>{
-            const chart = new radarChart("radarChart","radarData.json");
-            chart.init();
-        });
+        async init(){
+            const data = await this.fetchData();
+            if(data) this.renderChart(data);
+        }
+    }
 
+    document.addEventListener("DOMContentLoaded", ()=>{
+        const chart = new radarChart("radarChart","radarData.json");
+        chart.init();
+    });
